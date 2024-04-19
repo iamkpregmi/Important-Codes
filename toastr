@@ -1,0 +1,53 @@
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
+<script>
+$(document).ready(function(){
+      var countdown;  // Define the countdown variable globally to clear it when needed
+  
+      $('#sendOtpButtonsignup').click(function(e){
+          e.preventDefault();  // Prevent form submission if button is inside a form
+  
+          // Fetch the email from the input
+          var email = $('#email').val();
+          toastr.success('OTP Sent Successfully!');
+          // Make the AJAX POST request
+          $.ajax({
+              url: "{% url 'vendors:send_otp' %}",  // URL of your Django view
+              type: 'POST',
+              data: {
+                  'csrfmiddlewaretoken': '{{ csrf_token }}',
+                  'email': email
+              },
+              success: function(response) {
+                  startTimer(300);  // Start a 5-minute countdown upon successful AJAX call
+              },
+              error: function() {
+                  alert('Error sending OTP.');
+              }
+          });
+      });
+  
+      function startTimer(duration) {
+          var timer = duration, minutes, seconds;
+          clearInterval(countdown);  // Clear any existing timers
+          countdown = setInterval(function () {
+              minutes = parseInt(timer / 60, 10);
+              seconds = parseInt(timer % 60, 10);
+  
+              minutes = minutes < 10 ? "0" + minutes : minutes;
+              seconds = seconds < 10 ? "0" + seconds : seconds;
+  
+              // Update the timer display
+              $('#timerDisplay').text(Time remaining: ${minutes}:${seconds});
+  
+              if (--timer < 0) {
+                  clearInterval(countdown);
+                  $('#timerDisplay').text("Time's up! Please request a new OTP.");
+              }
+          }, 1000);
+      }
+  });
+</script>
+
