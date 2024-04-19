@@ -1,0 +1,41 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<li class="nav-item">
+    <a href="{% url 'logout' %}">
+        <button class="mt-3 btn btn btn-sm send-email-btn" title="Logout">
+            <i class="material-icons edit" style="font-size: 22px;">logout</i>
+        </button>
+    </a>&nbsp;&nbsp;
+</li>
+
+
+<script>
+$(document).ready(function(){
+  $(document).tooltip();
+});
+</script>
+
+<script>
+$(document).ready(function(){
+  $('.send-email-btn').tooltip();
+});
+</script>
+
+
+<script>
+$(document).ready(function(){
+  $('.send-email-btn').tooltip({
+    position: {
+      my: "center top", // The top middle of the tooltip will be aligned...
+      at: "center bottom", // ...to the bottom middle of the target element.
+      collision: "none" // This prevents the tooltip from being repositioned if it collides with the window edges.
+    }
+  });
+});
+</script>
+
+
