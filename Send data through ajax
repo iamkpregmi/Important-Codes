@@ -1,0 +1,40 @@
+$(document).ready(function() {
+  $('#signup-tab').submit(function(e) {
+    e.preventDefault();
+    var name = $('#su-name').val();
+    var email = $('#su-email').val();
+    var password1 = $('#su-password').val();
+    var password2 = $('#su-password-confirm').val();
+    var csrftoken = $('input[name="csrfmiddlewaretoken"]').val();
+
+    $.ajax({
+      url: '{% url "users:ajax_signup" %}',
+      type: 'POST',
+      data: {
+        'name': name,
+        'email': email,
+        'password1': password1,
+        'password2': password2,
+        'csrfmiddlewaretoken': csrftoken
+      },
+      success: function(response) {
+        console.log(response, "Create Ho gya")
+        //signup conformation code
+        toastr.success('Sign up Successfully!');
+       
+        if (response.success) {
+           location.reload();
+          // Signup successful, reload the page or redirect to a desired URL
+         
+        } else {
+          $(".skr-error-message").addClass("d-block").text(response.message)
+        }
+      },
+      error: function(xhr, status, error) {
+        console.log(error);
+        toastr.error('Something Wrong.');
+      }
+    });
+  });
+});
+  </script>
