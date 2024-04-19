@@ -1,0 +1,62 @@
+#Ajax for delete row without refresh page
+
+<script>
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this tax invoice?');
+    }
+
+    $(document).ready(function() {
+        $('.delete-tax-invoice').click(function(e) {
+            e.preventDefault(); // Prevent the default anchor behavior
+            var itemId = $(this).data('id'); // Get the id of the item to delete
+            console.log('this is id', itemId)
+             // Remember the clicked button
+            var $clickedButton = $(this);
+            if (confirmDelete()) { // Confirm deletion
+                $.ajax({
+                    url: '/delete_tax_invoice_ajax/',
+                    method: 'POST',
+                    data: {
+                        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                        id: itemId,
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            $clickedButton.closest('tr').remove();
+                            // Optionally, remove the item from the DOM or refresh part of your page
+                        } else {
+                            alert(response.message); // Notify the user of failure
+                        }
+                    },
+                    error: function(xhr, errmsg, err) {
+                        // Handle failure
+                        alert('Error: ' + xhr.status + ': ' + xhr.responseText);
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
+
+
+
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+@login_required
+def delete_tax_invoice_ajax(request):
+    
+    if request.method == "POST":
+        item_id = request.POST.get('id')
+        try:
+            tax_invoice_obj = TaxInvoice.objects.get(id=item_id)
+            tax_invoice_obj.delete()
+            return JsonResponse({"success": True, "message": "Tax invoice deleted successfully."})
+        except TaxInvoice.DoesNotExist:
+            return JsonResponse({"success": False, "message": "Tax invoice not found."}, status=404)
+    else:
+        return JsonResponse({"success": False, "message": "Invalid request."}, status=400)
+
+
+
