@@ -1,0 +1,66 @@
+this is code responsible for ajex post request handle
+<script>
+  $(document).ready(function() {
+    $(document).on('change', '.item-checkbox', function() {
+          var itemId = $(this).data('id');  // Get the item id
+          var isActive = $(this).is(':checked');  // Get the checkbox state
+ 
+          // Send the AJAX request
+          $.ajax({
+              url: '{% url 'srf:update_item_scope' %}',  // Replace with your update URL
+              method: 'POST',
+              data: {
+                  'item_id': itemId,
+                  'is_active': isActive,
+                  'csrfmiddlewaretoken': '{{ csrf_token }}'  // Add the CSRF token
+              },
+              success: function(data) {
+                  toastr.success('Updated successfully!');
+              },
+              error: function() {
+                        // Toast on error
+                        toastr.error('An error occurred while updating.');
+                     }
+          });
+      });
+  });
+ 
+// This is for delet scope
+  $(document).ready(function(){
+      $('tbody').on('click', '.delet_scope', function() {
+         id = $(this).closest('tr').find('.id_class input').val()
+         console.log('this is delte id', id)
+         is_yes = confirm('Are you sure ?')
+         // this_clossest_tr = $(this).closest('tr').remove()
+         var $t = $(this);
+         var $row = $(this).closest('tr');  // Get the closest table row for removal
+         console.log($row,'okkkkkkkkkkkkk');
+         dataTableSearch=document.getElementById('products-list');
+         
+         if (is_yes){
+         
+               $.ajax({
+                  url : "{% url 'srf:delete_specifilimits_ajax' %}",
+                  method : 'POST',
+                  data:{
+                     'obj_id':id
+                  },
+                  success: function(response) {
+                        // Toast on success
+                        toastr.success('Updated successfully!');
+                        // dataTableSearch.row($row).remove().draw();
+                        // dataTableSearch.rows($row).remove().draw();
+                        dataTableSearch.row($row[0]).remove().draw();
+                        console.log("last")
+                    },
+                  error: function() {
+                        // Toast on error
+                        toastr.error('An error occurred while updating.');
+                     }
+ 
+               })
+               // $(this).closest('tr').remove()
+            }
+      })
+   })
+  </script>
