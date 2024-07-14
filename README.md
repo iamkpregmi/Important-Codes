@@ -1,7 +1,5 @@
 # Important-Codes
 Frontend and Backend important codes
-
-#Important Comand for the docker
   
   docker build -t my-app-name .
   
